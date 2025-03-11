@@ -27,3 +27,18 @@ A full-featured blog API built with Django, Django REST Framework, and JWT authe
 
 Access the API documentation at `/swagger/` or `/redoc/` endpoints after running the server. 
 
+
+### If You Get Any Error  
+
+**Example:**  
+```
+File "<frozen importlib._bootstrap>", line 1387, in _gcd_import  
+File "<frozen importlib._bootstrap>", line 1360, in _find_and_load  
+File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked  
+```
+
+**Solution:**  
+Use the following command to fix the issue:  
+```
+pip install --upgrade setuptools
+```
