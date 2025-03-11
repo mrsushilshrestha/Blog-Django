@@ -1,0 +1,91 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Profile - Blog{% endblock %} {% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="profile-header">
+        {% if user.profile.profile_pic %}
+        <img
+          src="{{ user.profile.profile_pic.url }}"
+          alt="{{ user.username }}"
+          class="profile-avatar"
+        />
+        {% else %}
+        <img
+          src="/static/images/default-avatar.jpg"
+          alt="{{ user.username }}"
+          class="profile-avatar"
+        />
+        {% endif %}
+        <h2>{{ user.username }}</h2>
+        <p class="text-muted">
+          Joined on {{ user.profile.date_joined|date:"F d, Y" }}
+        </p>
+        <p>{{ user.profile.bio|default:"No bio available." }}</p>
+      </div>
+
+      <div class="form-container">
+        <h3 class="form-title">Edit Profile</h3>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label for="{{ form.bio.id_for_label }}" class="form-label"
+              >Bio</label
+            >
+            {{ form.bio }}
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.profile_pic.id_for_label }}" class="form-label"
+              >Profile Picture</label
+            >
+            {{ form.profile_pic }}
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">
+              Update Profile
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <h3 class="mb-4">Your Posts</h3>
+
+      {% for post in user_posts %}
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">{{ post.title }}</h5>
+          <p class="card-text text-muted">
+            <small>Posted on {{ post.created_at|date:"F d, Y" }}</small>
+          </p>
+          <p class="card-text">{{ post.content|truncatewords:30 }}</p>
+          <div class="d-flex justify-content-between">
+            <a
+              href="{% url 'post_detail' post.slug %}"
+              class="btn btn-sm btn-primary"
+              >View Post</a
+            >
+            <div>
+              <span class="text-muted me-3">
+                <i class="bi bi-chat"></i> {{ post.comment_count }}
+              </span>
+              <span class="text-danger">
+                <i class="bi bi-heart"></i> {{ post.like_count }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="alert alert-info">
+        You haven't created any posts yet.
+        <a href="{% url 'create_post' %}">Create your first post</a>!
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

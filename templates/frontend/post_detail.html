@@ -1,0 +1,114 @@
+{% extends 'base.html' %} {% load static %} {% block title %}{{ post.title }} - Blog{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <!-- Post Content -->
+      <article>
+        <header class="mb-4">
+          <h1 class="fw-bold mb-1">{{ post.title }}</h1>
+          <div class="text-muted fst-italic mb-2">
+            Posted on {{ post.created_at|date:"F d, Y" }} by {{
+            post.author.username }}
+          </div>
+          <div class="d-flex mb-3">
+            <span class="text-muted me-3">
+              <i class="bi bi-chat"></i> {{ post.comment_count }} Comments
+            </span>
+            <span class="text-danger">
+              <i class="bi bi-heart"></i> {{ post.like_count }} Likes
+            </span>
+          </div>
+        </header>
+
+        {% if post.image %}
+        <figure class="mb-4">
+          <img
+            class="img-fluid rounded"
+            src="{{ post.image.url }}"
+            alt="{{ post.title }}"
+          />
+        </figure>
+        {% endif %}
+
+        <section class="mb-5">
+          <p class="fs-5">{{ post.content|linebreaks }}</p>
+        </section>
+
+        <!-- Post Actions -->
+        <div class="d-flex justify-content-between mb-5">
+          <div>
+            <form
+              action="{% url 'like_post' post.slug %}"
+              method="post"
+              class="d-inline"
+            >
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger">
+                {% if user_liked_post %}
+                <i class="bi bi-heart-fill"></i> Unlike {% else %}
+                <i class="bi bi-heart"></i> Like {% endif %}
+              </button>
+            </form>
+          </div>
+          {% if user == post.author %}
+          <div>
+            <a
+              href="{% url 'edit_post' post.slug %}"
+              class="btn btn-outline-primary me-2"
+            >
+              <i class="bi bi-pencil"></i> Edit
+            </a>
+            <a
+              href="{% url 'delete_post' post.slug %}"
+              class="btn btn-outline-danger"
+            >
+              <i class="bi bi-trash"></i> Delete
+            </a>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Comments Section -->
+        <div class="card bg-light mb-4">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Comments ({{ post.comment_count }})</h4>
+
+            {% if user.is_authenticated %}
+            <!-- Comment Form -->
+            <div class="mb-4">
+              <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">{{ comment_form.content }}</div>
+                <button type="submit" class="btn btn-primary">
+                  Submit Comment
+                </button>
+              </form>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+              Please <a href="{% url 'login' %}">login</a> to leave a comment.
+            </div>
+            {% endif %}
+
+            <!-- Comments List -->
+            {% for comment in comments %}
+            <div class="comment mb-3">
+              <div class="comment-meta d-flex justify-content-between">
+                <strong>{{ comment.author.username }}</strong>
+                <small class="text-muted"
+                  >{{ comment.created_at|date:"F d, Y" }}</small
+                >
+              </div>
+              <p class="mb-0">{{ comment.content }}</p>
+            </div>
+            {% empty %}
+            <p>No comments yet. Be the first to comment!</p>
+            {% endfor %}
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
+{% endblock %}
