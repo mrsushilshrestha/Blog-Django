@@ -42,3 +42,7 @@ Use the following command to fix the issue:
 ```
 pip install --upgrade setuptools
 ```
+
+
+## Demo Video
+https://github.com/mrsushilshrestha/Blog-Django/blob/main/Demo-Video/Sushil-blog.gif
