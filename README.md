@@ -43,5 +43,15 @@ Use the following command to fix the issue:
 pip install --upgrade setuptools
 ```
 
+## You Can Try With 
+ ```username : hp
+    password : hp
+
+
+    username: sushil
+    username: sushil
+
+```
+
 ## Demo Video
 ![Sushil Blog Demo](https://github.com/mrsushilshrestha/Blog-Django/raw/main/Demo-Video/Sushil-blog.gif)
