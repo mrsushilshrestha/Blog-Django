@@ -108,6 +108,7 @@ def profile(request):
         'user_posts': user_posts
     })
 
+
 def register(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -118,6 +119,9 @@ def register(request):
             user = form.save()
             messages.success(request, 'Registration successful! Please login.')
             return redirect('login')
+        else:
+            messages.error(request, 'Error: Passwords do not match or other errors occurred. Please try again.')
     else:
         form = UserCreationForm()
+        
     return render(request, 'frontend/register.html', {'form': form})
